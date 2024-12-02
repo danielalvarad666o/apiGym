@@ -49,7 +49,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('clase_id')->constrained('clases')->onDelete('cascade');
             $table->foreignId('entrenador_id')->constrained('entrenadores')->onDelete('cascade');
-            $table->string('dia_semana', 10); // Ejemplo: Lunes
+            $table->string('dia_semana'); // Ejemplo: Lunes
             $table->time('hora_inicio');
             $table->time('hora_fin');
             $table->timestamps();
@@ -65,6 +65,13 @@ return new class extends Migration
             $table->string('metodo_pago', 50); // Ejemplo: Tarjeta, Efectivo
             $table->timestamps();
         });
+        Schema::create('usuario_clas', function (Blueprint $table) {
+            $table->id(); // Clave primaria
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Relación con 'users'
+            $table->foreignId('horario_clase_id')->constrained('horarios_clases')->onDelete('cascade'); // Relación con 'horarios_clases'
+            $table->timestamps(); // Timestamps para seguimiento
+        });
+        
     }
 
     /**

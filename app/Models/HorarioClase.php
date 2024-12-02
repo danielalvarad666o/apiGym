@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HorarioClase extends Model
 {
     use HasFactory;
-
+    protected $table = 'horarios_clases';
     protected $fillable = [
         'clase_id',
         'entrenador_id',
@@ -32,4 +32,9 @@ class HorarioClase extends Model
     {
         return $this->belongsTo(Entrenador::class);
     }
+    public function users()
+{
+    return $this->belongsToMany(User::class, 'usuario_clas', 'horario_clase_id', 'user_id');
+}
+
 }
