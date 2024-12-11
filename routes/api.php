@@ -16,7 +16,7 @@ Route::get('/user', function (Request $request) {
 Route::prefix('users')->group(function () {
     Route::get('/', [UserController::class, 'index']); // Lista de usuarios
     Route::get('/{id}', [UserController::class, 'show']); // Mostrar un usuario específico
-    Route::put('/{id}', [UserController::class, 'update']); // Actualizar usuario
+    Route::put('update/{id}', [UserController::class, 'update']); // Actualizar usuario
     Route::post('/{id}/status', [UserController::class, 'updateStatus']); // Actualizar estado del usuario
     Route::delete('/{id}', [UserController::class, 'destroy']); // Eliminar usuario
     Route::post('/cUser', [UserController::class, 'crearUser']);
@@ -62,7 +62,7 @@ use App\Http\Controllers\UsuarioClasController;
 // Rutas para la API de gestión de clases y usuarios
 
 // Obtener todas las clases disponibles
-Route::get('/clases', [userClasController::class, 'index']);
+Route::get('/clases/{id}', [userClasController::class, 'index']);
 
 // Obtener las clases inscritas por un usuario
 Route::get('/usuarios/{userId}/clases', [userClasController::class, 'misClases']);
@@ -71,7 +71,8 @@ Route::get('/usuarios/{userId}/clases', [userClasController::class, 'misClases']
 Route::post('/inscribiraclase', [userClasController::class, 'inscribir']);
 
 // Desinscribir a un usuario de una clase
-Route::delete('/desinscribir/{id}', [userClasController::class, 'desinscribir']);
+Route::delete('/desinscribir/{userId}/{classId}', [userClasController::class, 'desinscribir']);
+
 
 Route::get('/claseinf/{claseId}', function ($claseId) {
 

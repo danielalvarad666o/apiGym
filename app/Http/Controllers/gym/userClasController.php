@@ -11,16 +11,31 @@ use App\Models\User;
 
 class userClasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $clases = HorarioClase::with(['clase', 'entrenador'])->get(); // Incluye las relaciones
+        // Obtener el usuario autenticado
 
+
+
+
+        // Obtener el ID del usuario autenticado
+        $userId = $request->id;
+
+
+        // Obtener las clases en las que el usuario no está inscrito
+        $inscripciones = UsuarioClas::where('user_id', $userId)->pluck('horario_clase_id');
+
+
+        $clases = HorarioClase::with(['clase', 'entrenador'])
+            ->whereNotIn('id', $inscripciones)
+            ->get();
 
         return response()->json([
             'success' => true,
             'data' => $clases,
         ]);
     }
+
 
     // Mostrar las clases inscritas de un usuario
     public function misClases($userId)
@@ -86,15 +101,27 @@ class userClasController extends Controller
     }
 
     // Eliminar inscripción de una clase
-    public function desinscribir($id)
+    public function desinscribir($userId, $classId)
     {
-        $inscripcion = UsuarioClas::findOrFail($id);
+        // Buscar la inscripción basada en el ID del usuario y de la clase
+        $inscripcion = UsuarioClas::where('user_id', $userId)
+            ->where('horario_clase_id', $classId)
+            ->first();
 
+        // Validar si la inscripción existe
+        if (!$inscripcion) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la inscripción especificada.',
+            ], 404);
+        }
+
+        // Eliminar la inscripción
         $inscripcion->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Te has desinscrito correctamente.',
+            'message' => 'Te has desinscrito correctamente de la clase.',
         ]);
     }
 }
