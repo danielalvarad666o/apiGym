@@ -57,12 +57,23 @@ Route::get('statuses', function () {
     return response()->json((object)$hc);;
 });
 
+
+Route::get('clasesall', function () {
+    $clases = HorarioClase::with(['clase', 'entrenador'])->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $clases,
+    ]);
+});
+
 use App\Http\Controllers\UsuarioClasController;
 
 // Rutas para la API de gestión de clases y usuarios
 
 // Obtener todas las clases disponibles
 Route::get('/clases/{id}', [userClasController::class, 'index']);
+
 
 // Obtener las clases inscritas por un usuario
 Route::get('/usuarios/{userId}/clases', [userClasController::class, 'misClases']);
